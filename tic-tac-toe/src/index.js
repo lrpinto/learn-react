@@ -3,39 +3,47 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
   class Square extends React.Component {
-    /* Added a constructor to this class in order to initialise state */
-    constructor(props) {
-      super(props);
-      this.state = {
-        value: null
-      }; /** React components can have state by setting this.state in their constructors. 
-           * this.state should be considered as private to a React component that it’s defined in 
-           */
-    }
-
       render() {
         return (
           <button 
             className="square" 
-            onClick={() => this.setState({value: 'X'})} /**
-                                                         * By calling this.setState from an onClick handler in the Square’s render method, 
-                                                         * we tell React to re-render that Square whenever its <button> is clicked 
-                                                         * 
-                                                         * Notice how with onClick={() => alert('click')}, 
-                                                         * we’re passing a function as the onClick prop. It only fires after a click. 
-                                                         * Forgetting () => and writing onClick={alert('click')} is a common mistake, 
-                                                         * and would fire the alert every time the component re-renders.
-                                                         */
-            >
-              {this.state.value}
+            onClick={() => this.props.onClick()}
+          >
+            {this.props.value}
           </button>
         );
       }
   }
   
   class Board extends React.Component {
+
+    /* Constructor to set the Board's initial state to contain an array with 9 nulls. 
+     * These 9 nulls correspond to the 9 squares. 
+     */
+    constructor(props) {
+      super(props);
+      this.state = { 
+        squares: Array(9).fill(null),
+      };
+    }
+
+    handleClick(i) {
+      const squares = this.state.squares.slice();
+      squares[i] = 'X';
+      this.setState({squares: squares});
+    }
+
     renderSquare(i) {
-      return <Square value={i}/>; // Pass property value to the Square component
+      return (
+        /**
+         * Pass value of the Board's -ith square to the Square component, 
+         * and call the Board's function handleClick when a Square is clicked.
+         */
+        <Square 
+            value={this.state.squares[i]}
+            onClick={() => this.handleClick(i)}
+          />
+      ); 
     }
   
     render() {
