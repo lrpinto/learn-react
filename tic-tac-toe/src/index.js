@@ -2,17 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-  class Square extends React.Component {
-      render() {
-        return (
-          <button 
-            className="square" 
-            onClick={() => this.props.onClick()}
-          >
-            {this.props.value}
-          </button>
-        );
-      }
+  /** 
+   * Square is now a function componenent - a simpler way to write components that only contain a render method and don’t have their own state
+   */
+  function Square (props) {
+      return (
+        <button className="square" onClick={props.onClick}>
+          {props.value}
+         </button>
+      );
   }
   
   class Board extends React.Component {
@@ -24,13 +22,23 @@ import './index.css';
       super(props);
       this.state = { 
         squares: Array(9).fill(null),
+        xIsNext: true,
       };
     }
 
     handleClick(i) {
+      /**
+       * Create a copy of the squares array to modify instead of modifying the existing array.
+       * 
+       * Ref. Why immutability is important
+       * https://reactjs.org/tutorial/tutorial.html#why-immutability-is-important
+       */
       const squares = this.state.squares.slice();
-      squares[i] = 'X';
-      this.setState({squares: squares});
+      squares[i] = this.state.xIsNext ? 'X' : 'O';
+      this.setState({
+        squares: squares,
+        xIsNext: !this.state.xIsNext,
+      });
     }
 
     renderSquare(i) {
@@ -47,7 +55,7 @@ import './index.css';
     }
   
     render() {
-      const status = 'Next player: X';
+      const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
   
       return (
         <div>
