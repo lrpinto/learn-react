@@ -1,2 +1,3 @@
-# react-examples
-Examples interactive UIs created with React.
+# Learning React
+
+This repository hosts several React tutorials.
